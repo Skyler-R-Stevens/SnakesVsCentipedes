@@ -1,0 +1,31 @@
+# Visual Studio hidden settings
+.vs/
+
+# CMake build output
+out/
+build/
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+
+# Build folders
+Debug/
+Release/
+x64/
+x86/
+
+# Compiled files
+*.exe
+*.dll
+*.pdb
+*.obj
+*.ilk
+
+# User-specific files
+*.user
+*.suo
+*.VC.db
+*.VC.opendb

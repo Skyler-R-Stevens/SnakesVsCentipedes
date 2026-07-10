@@ -1,14 +1,26 @@
-﻿// Snakes Vs Centipedes.cpp : Defines the entry point for the application.
-//
-
-#include <iostream>
-#include "Game.h"
-
-//
-// using namespace std;
+﻿#include <SFML/Graphics.hpp>
 
 int main()
 {
-	std::cout << "Snakes Vs Centipedes" << std::endl;
-	return 0;
+    sf::RenderWindow window(
+        sf::VideoMode({ 800, 600 }),
+        "Snakes Vs. Centipedes"
+    );
+
+    while (window.isOpen())
+    {
+        while (const auto event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+            {
+                window.close();
+            }
+        }
+
+        window.clear();
+
+        window.display();
+    }
+
+    return 0;
 }

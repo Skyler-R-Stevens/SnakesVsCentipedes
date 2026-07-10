@@ -11,6 +11,8 @@ endif()
 
 project ("SnakesVsCentipedes")
 
+find_package(SFML COMPONENTS Graphics REQUIRED)
+
 # Add source to this project's executable.
 add_executable (SnakesVsCentipedes Main.cpp Game.h)
 
@@ -19,3 +21,8 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 # TODO: Add tests and install targets if needed.
+target_link_libraries(
+    SnakesVsCentipedes
+    PRIVATE
+    SFML::Graphics
+)

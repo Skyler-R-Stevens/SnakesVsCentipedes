@@ -7,28 +7,22 @@ Game::Game()
         sf::VideoMode({ 800, 600 }),
         "Snakes Vs. Centipedes"
     ),
-    title(font),
-    startText(font),
+    menu(font),
     snakeHead({ 30.f, 30.f }),
     fontLoaded(false),
-    gameStarted(false)
+    currentState(GameState::MainMenu) 
 {
     fontLoaded = font.openFromFile(
         "assets/fonts/Roboto-VariableFont_wdth,wght.ttf"
     );
 
-    title.setString("Snakes Vs. Centipedes");
-    title.setCharacterSize(48);
-
-    startText.setString("Press Enter to Start");
-    startText.setCharacterSize(28);
 
     snakeHead.setFillColor(sf::Color::Green);
     snakeHead.setPosition({ 100.f, 100.f });
 
     const sf::Vector2u windowSize = window.getSize();
 
-    updateTextLayout(
+    menu.resize(
         static_cast<float>(windowSize.x),
         static_cast<float>(windowSize.y)
     );
@@ -64,7 +58,7 @@ void Game::processEvents()
         {
             if (keyPressed->code == sf::Keyboard::Key::Enter)
             {
-                gameStarted = true;
+                currentState = GameState::Playing;
             }
         }
 
@@ -90,62 +84,24 @@ void Game::handleResize(const sf::Vector2u& newSize)
 
     window.setView(resizedView);
 
-    updateTextLayout(width, height);
+    menu.resize(width, height);
 }
 
-void Game::updateTextLayout(float width, float height)
-{
-    const unsigned int titleSize =
-        static_cast<unsigned int>(
-            std::clamp(width * 0.06f, 24.f, 72.f)
-            );
 
-    const unsigned int startSize =
-        static_cast<unsigned int>(
-            std::clamp(width * 0.035f, 16.f, 40.f)
-            );
-
-    title.setCharacterSize(titleSize);
-    startText.setCharacterSize(startSize);
-
-    const sf::FloatRect titleBounds = title.getLocalBounds();
-
-    title.setOrigin({
-        titleBounds.position.x + titleBounds.size.x / 2.f,
-        titleBounds.position.y + titleBounds.size.y / 2.f
-        });
-
-    const sf::FloatRect startBounds = startText.getLocalBounds();
-
-    startText.setOrigin({
-        startBounds.position.x + startBounds.size.x / 2.f,
-        startBounds.position.y + startBounds.size.y / 2.f
-        });
-
-    title.setPosition({
-        width / 2.f,
-        height * 0.42f
-        });
-
-    startText.setPosition({
-        width / 2.f,
-        height * 0.58f
-        });
-}
 
 void Game::render()
 {
     window.clear();
 
-    if (!gameStarted)
+    switch (currentState)
     {
-        window.draw(title);
-        window.draw(startText);
-    }
-    else
-    {
-        window.draw(snakeHead);
-    }
+    case GameState::MainMenu:
+        menu.draw(window);
+        break;
 
+    case GameState::Playing:
+        window.draw(snakeHead);
+        break;
+    }
     window.display();
 }

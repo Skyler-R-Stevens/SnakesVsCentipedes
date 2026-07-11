@@ -4,9 +4,15 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "Menu.h"
 
 class Game
 {
+    enum class GameState
+    {
+        MainMenu,
+        Playing
+    };
 public:
     Game();
 
@@ -15,18 +21,16 @@ public:
 private:
     void processEvents();
     void handleResize(const sf::Vector2u& newSize);
-    void updateTextLayout(float width, float height);
     void render();
 
     sf::RenderWindow window;
 
     sf::Font font;
-    sf::Text title;
-    sf::Text startText;
+    Menu menu;
 
     sf::RectangleShape snakeHead;
 
     bool fontLoaded;
-    bool gameStarted;
+    GameState currentState;
 };
 // TODO: Reference additional headers your program requires here.

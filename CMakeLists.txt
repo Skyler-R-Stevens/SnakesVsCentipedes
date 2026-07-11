@@ -19,6 +19,8 @@ add_executable (
     Main.cpp
     Game.cpp
     Game.h
+    Menu.cpp
+    Menu.h
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

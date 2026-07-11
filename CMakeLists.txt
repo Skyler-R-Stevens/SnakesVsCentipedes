@@ -21,6 +21,8 @@ add_executable (
     Game.h
     Menu.cpp
     Menu.h
+    Snake.cpp
+    Snake.h
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

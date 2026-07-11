@@ -1,5 +1,4 @@
 #include "Game.h"
-
 #include <algorithm>
 
 Game::Game()
@@ -8,7 +7,7 @@ Game::Game()
         "Snakes Vs. Centipedes"
     ),
     menu(font),
-    snakeHead({ 30.f, 30.f }),
+    snake(),
     fontLoaded(false),
     currentState(GameState::MainMenu) 
 {
@@ -16,9 +15,6 @@ Game::Game()
         "assets/fonts/Roboto-VariableFont_wdth,wght.ttf"
     );
 
-
-    snakeHead.setFillColor(sf::Color::Green);
-    snakeHead.setPosition({ 100.f, 100.f });
 
     const sf::Vector2u windowSize = window.getSize();
 
@@ -100,7 +96,7 @@ void Game::render()
         break;
 
     case GameState::Playing:
-        window.draw(snakeHead);
+        snake.draw(window);
         break;
     }
     window.display();

@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "Menu.h"
+#include "Snake.h"
 
 class Game
 {
@@ -28,7 +29,7 @@ private:
     sf::Font font;
     Menu menu;
 
-    sf::RectangleShape snakeHead;
+    Snake snake;
 
     bool fontLoaded;
     GameState currentState;

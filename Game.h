@@ -4,6 +4,7 @@
 
 #include "Menu.h"
 #include "Snake.h"
+#include "GameOverScreen.h"
 
 // Controls the main application loop and coordinates the game's systems.
 class Game
@@ -13,7 +14,8 @@ private:
     enum class GameState
     {
         MainMenu,
-        Playing
+        Playing,
+        GameOver
     };
 
 public:
@@ -31,8 +33,8 @@ private:
     // Updates the SFML view and menu layout after the window is resized.
     void handleResize(const sf::Vector2u& newSize);
 
-	// Ensures the snake remains within the window boundaries.
-    void keepSnakeInsideWindow();
+	// See if the snake has collided with the window boundaries.
+    bool hasSnakeHitWall() const;
 
     // Draws the current game state to the window.
     void render();
@@ -46,9 +48,10 @@ private:
     // Shared font used by text in the game.
     sf::Font font;
 
-    // Objects responsible for the menu and snake behavior.
+    // Objects responsible for the menu, snake, and game over screen behavior.
     Menu menu;
     Snake snake;
+    GameOverScreen gameOverScreen;
 
     // Records whether the font loaded successfully.
     bool fontLoaded;

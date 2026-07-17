@@ -8,6 +8,7 @@ Game::Game()
         "Snakes Vs. Centipedes"
     ),
     menu(font),
+	gameOverScreen(font),
     snake(),
     fontLoaded(false),
     currentState(GameState::MainMenu) 
@@ -20,6 +21,10 @@ Game::Game()
     const sf::Vector2u windowSize = window.getSize();
 
     menu.resize(
+        static_cast<float>(windowSize.x),
+        static_cast<float>(windowSize.y)
+    );
+    gameOverScreen.resize(
         static_cast<float>(windowSize.x),
         static_cast<float>(windowSize.y)
     );
@@ -42,7 +47,11 @@ int Game::run()
         if (currentState == GameState::Playing)
         {
             snake.move(deltaTime);
-            keepSnakeInsideWindow();
+
+            if (hasSnakeHitWall())
+            {
+                currentState = GameState::GameOver;
+            }
         }
 
         render();
@@ -122,30 +131,39 @@ void Game::handleResize(const sf::Vector2u& newSize)
     window.setView(resizedView);
 
     menu.resize(width, height);
+    gameOverScreen.resize(width, height);
 }
 
 // Clamps the snake's position so it remains inside the window.
-void Game::keepSnakeInsideWindow()
+bool Game::hasSnakeHitWall() const
 {
     const sf::FloatRect snakeBounds = snake.getBounds();
     const sf::Vector2u windowSize = window.getSize();
 
-    sf::Vector2f correctedPosition = snakeBounds.position;
+    const float windowWidth =
+        static_cast<float>(windowSize.x);
 
-    const float maximumX =
-        static_cast<float>(windowSize.x) - snakeBounds.size.x;
+    const float windowHeight =
+        static_cast<float>(windowSize.y);
 
-    const float maximumY =
-        static_cast<float>(windowSize.y) - snakeBounds.size.y;
+    const bool hitLeftWall =
+        snakeBounds.position.x < 0.f;
 
-    correctedPosition.x =
-        std::clamp(correctedPosition.x, 0.f, maximumX);
+    const bool hitTopWall =
+        snakeBounds.position.y < 0.f;
 
-    correctedPosition.y =
-        std::clamp(correctedPosition.y, 0.f, maximumY);
+    const bool hitRightWall =
+        snakeBounds.position.x + snakeBounds.size.x > windowWidth;
 
-    snake.setPosition(correctedPosition);
+    const bool hitBottomWall =
+        snakeBounds.position.y + snakeBounds.size.y > windowHeight;
+
+    return hitLeftWall ||
+        hitTopWall ||
+        hitRightWall ||
+        hitBottomWall;
 }
+
 
 // Draws the menu or gameplay depending on the current game state.
 void Game::render()
@@ -160,6 +178,9 @@ void Game::render()
 
     case GameState::Playing:
         snake.draw(window);
+        break;
+    case GameState::GameOver:
+        gameOverScreen.draw(window);
         break;
     }
     window.display();

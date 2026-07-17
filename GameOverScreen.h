@@ -18,4 +18,5 @@ public:
 private:
     sf::Text gameOverText;
     sf::Text restartText;
+	sf::Text backToMenuText;
 };

@@ -81,6 +81,21 @@ void Game::processEvents()
                     currentState = GameState::Playing;
                 }
             }
+            else if(currentState == GameState::GameOver)
+            {
+                if (keyPressed->code == sf::Keyboard::Key::Enter)
+                {
+                    // Reset the game state
+                    currentState = GameState::Playing;
+                    snake.reset();
+                }
+                if (keyPressed->code == sf::Keyboard::Key::Escape)
+                {
+                    // Reset the game state
+                    currentState = GameState::MainMenu;
+                    snake.reset();
+                }
+            }
             else
             {
                 switch (keyPressed->code)

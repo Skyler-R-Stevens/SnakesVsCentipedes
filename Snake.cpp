@@ -2,12 +2,11 @@
 
 Snake::Snake()
     : head({ 30.f, 30.f }),
-    direction(Direction::Right),
     speed(150.f)
 
 {
     head.setFillColor(sf::Color::Green);
-    head.setPosition({ 100.f, 100.f });
+	reset();
 }
 
 void Snake::setPosition(sf::Vector2f position)
@@ -18,6 +17,13 @@ void Snake::setPosition(sf::Vector2f position)
 void Snake::setDirection(Direction newDirection)
 {
     direction = newDirection;
+}
+
+// Restores the snake to its starting position and direction.
+void Snake::reset()
+{
+    head.setPosition({ 100.f, 100.f });
+    direction = Direction::Right;
 }
 
 void Snake::draw(sf::RenderWindow& window) const

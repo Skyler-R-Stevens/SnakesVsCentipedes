@@ -1,7 +1,7 @@
 #include "Game.h"
-#include <algorithm>
+//#include <algorithm>
 
-//This is the constructor for the game class, it initializes the window, menu, snake, and font
+//This is the constructor for the game class, it initializes the window and all major game components.
 Game::Game()
     : window(
         sf::VideoMode({ 800, 600 }),
@@ -9,6 +9,7 @@ Game::Game()
     ),
     menu(font),
 	gameOverScreen(font),
+    map(),
     snake(),
     fontLoaded(false),
     currentState(GameState::MainMenu) 
@@ -20,14 +21,15 @@ Game::Game()
 
     const sf::Vector2u windowSize = window.getSize();
 
-    menu.resize(
-        static_cast<float>(windowSize.x),
-        static_cast<float>(windowSize.y)
-    );
-    gameOverScreen.resize(
-        static_cast<float>(windowSize.x),
-        static_cast<float>(windowSize.y)
-    );
+    const float windowWidth =
+        static_cast<float>(windowSize.x);
+
+    const float windowHeight =
+        static_cast<float>(windowSize.y);
+
+    menu.resize(windowWidth, windowHeight);
+    gameOverScreen.resize(windowWidth, windowHeight);
+    map.resize(windowWidth, windowHeight);
 }
 
 //This is the main game loop, it runs until the window closes.
@@ -78,22 +80,18 @@ void Game::processEvents()
             {
                 if (keyPressed->code == sf::Keyboard::Key::Enter)
                 {
-                    currentState = GameState::Playing;
+                    startNewRound();
                 }
             }
-            else if(currentState == GameState::GameOver)
+            else if (currentState == GameState::GameOver)
             {
                 if (keyPressed->code == sf::Keyboard::Key::Enter)
                 {
-                    // Reset the game state
-                    currentState = GameState::Playing;
-                    snake.reset();
+                    startNewRound();
                 }
-                if (keyPressed->code == sf::Keyboard::Key::Escape)
+                else if (keyPressed->code == sf::Keyboard::Key::Escape)
                 {
-                    // Reset the game state
                     currentState = GameState::MainMenu;
-                    snake.reset();
                 }
             }
             else
@@ -147,38 +145,33 @@ void Game::handleResize(const sf::Vector2u& newSize)
 
     menu.resize(width, height);
     gameOverScreen.resize(width, height);
+    map.resize(width, height);
 }
 
-// Clamps the snake's position so it remains inside the window.
+// Reports whether the snake has moved outside the map.
 bool Game::hasSnakeHitWall() const
 {
-    const sf::FloatRect snakeBounds = snake.getBounds();
-    const sf::Vector2u windowSize = window.getSize();
-
-    const float windowWidth =
-        static_cast<float>(windowSize.x);
-
-    const float windowHeight =
-        static_cast<float>(windowSize.y);
-
-    const bool hitLeftWall =
-        snakeBounds.position.x < 0.f;
-
-    const bool hitTopWall =
-        snakeBounds.position.y < 0.f;
-
-    const bool hitRightWall =
-        snakeBounds.position.x + snakeBounds.size.x > windowWidth;
-
-    const bool hitBottomWall =
-        snakeBounds.position.y + snakeBounds.size.y > windowHeight;
-
-    return hitLeftWall ||
-        hitTopWall ||
-        hitRightWall ||
-        hitBottomWall;
+    return !map.contains(snake.getBounds());
 }
 
+// Resets gameplay data and begins a fresh round.
+void Game::startNewRound()
+{
+    const sf::FloatRect mapBounds = map.getBounds();
+
+    const sf::Vector2f startingPosition(
+        {
+            mapBounds.position.x + 50.f,
+            mapBounds.position.y + 50.f
+        }
+    );
+
+    const Direction startingDirection = Direction::Right;
+
+    snake.reset(startingPosition, startingDirection);
+
+    currentState = GameState::Playing;
+}
 
 // Draws the menu or gameplay depending on the current game state.
 void Game::render()
@@ -192,6 +185,7 @@ void Game::render()
         break;
 
     case GameState::Playing:
+        map.draw(window);
         snake.draw(window);
         break;
     case GameState::GameOver:

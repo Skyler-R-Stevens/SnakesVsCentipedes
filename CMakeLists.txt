@@ -25,6 +25,8 @@ add_executable (
     Snake.h
     GameOverScreen.cpp
     GameOverScreen.h
+    Map.cpp
+    Map.h
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

@@ -17,7 +17,10 @@ public:
     Snake();
 
     //Main Actions
-    void reset();
+    void reset(
+        sf::Vector2f startingPosition,
+        Direction startingDirection
+    );
     void setPosition(sf::Vector2f position);
     void setDirection(Direction newDirection);
     void move(float deltaTime);

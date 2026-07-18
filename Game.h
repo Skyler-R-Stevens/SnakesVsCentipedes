@@ -5,6 +5,7 @@
 #include "Menu.h"
 #include "Snake.h"
 #include "GameOverScreen.h"
+#include "Map.h"
 
 // Controls the main application loop and coordinates the game's systems.
 class Game
@@ -39,6 +40,9 @@ private:
     // Draws the current game state to the window.
     void render();
 
+	// Guarantees that the game is ready for a new round of play.
+    void startNewRound();
+
     // The main window where the game is displayed.
     sf::RenderWindow window;
 
@@ -50,8 +54,9 @@ private:
 
     // Objects responsible for the menu, snake, and game over screen behavior.
     Menu menu;
-    Snake snake;
     GameOverScreen gameOverScreen;
+    Map map;
+    Snake snake;
 
     // Records whether the font loaded successfully.
     bool fontLoaded;

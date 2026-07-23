@@ -6,6 +6,8 @@
 #include "Snake.h"
 #include "GameOverScreen.h"
 #include "Map.h"
+#include "GameMode.h"
+#include "RoundSettings.h"
 
 // Controls the main application loop and coordinates the game's systems.
 class Game
@@ -41,6 +43,8 @@ private:
     void render();
 
 	// Guarantees that the game is ready for a new round of play.
+    void selectGameMode(GameMode newMode);
+    RoundSettings createRoundSettings() const;
     void startNewRound();
 
     // The main window where the game is displayed.
@@ -61,6 +65,8 @@ private:
     // Records whether the font loaded successfully.
     bool fontLoaded;
 
-    // Stores the currently active game state.
+    // Stores the currently active game state/Mode.
+    GameMode selectedMode;
     GameState currentState;
+
 };

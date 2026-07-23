@@ -27,6 +27,8 @@ add_executable (
     GameOverScreen.h
     Map.cpp
     Map.h
+    GameMode.h
+    RoundSettings.h
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

@@ -12,6 +12,7 @@ Game::Game()
     map(),
     snake(),
     fontLoaded(false),
+    selectedMode(GameMode::Classic),
     currentState(GameState::MainMenu) 
 {
     fontLoaded = font.openFromFile(
@@ -30,6 +31,8 @@ Game::Game()
     menu.resize(windowWidth, windowHeight);
     gameOverScreen.resize(windowWidth, windowHeight);
     map.resize(windowWidth, windowHeight);
+
+    menu.setSelectedMode(selectedMode);
 }
 
 //This is the main game loop, it runs until the window closes.
@@ -78,9 +81,22 @@ void Game::processEvents()
         {
             if (currentState == GameState::MainMenu)
             {
-                if (keyPressed->code == sf::Keyboard::Key::Enter)
+                switch (keyPressed->code)
                 {
+                case sf::Keyboard::Key::Num1:
+                    selectGameMode(GameMode::Classic);
+                    break;
+
+                case sf::Keyboard::Key::Num2:
+                    selectGameMode(GameMode::ArenaTest);
+                    break;
+
+                case sf::Keyboard::Key::Enter:
                     startNewRound();
+                    break;
+
+                default:
+                    break;
                 }
             }
             else if (currentState == GameState::GameOver)
@@ -112,6 +128,10 @@ void Game::processEvents()
 
                 case sf::Keyboard::Key::Right:
                     snake.setDirection(Direction::Right);
+                    break;
+
+				case sf::Keyboard::Key::Escape:
+					currentState = GameState::MainMenu;
                     break;
 
                 default:
@@ -154,23 +174,63 @@ bool Game::hasSnakeHitWall() const
     return !map.contains(snake.getBounds());
 }
 
-// Resets gameplay data and begins a fresh round.
+// Prepares all gameplay data and begins a fresh round.
 void Game::startNewRound()
+{
+    const RoundSettings settings = createRoundSettings();
+
+    snake.reset(
+        settings.snakePosition,
+        settings.snakeDirection
+    );
+
+    currentState = GameState::Playing;
+}
+
+// Sets the game mode for the next round.
+void Game::selectGameMode(GameMode newMode)
+{
+    selectedMode = newMode;
+    menu.setSelectedMode(selectedMode);
+}
+
+// Creates the starting conditions for the currently selected game mode.
+RoundSettings Game::createRoundSettings() const
 {
     const sf::FloatRect mapBounds = map.getBounds();
 
-    const sf::Vector2f startingPosition(
+    switch (selectedMode)
+    {
+    case GameMode::Classic:
+        return RoundSettings{
+            {
+                mapBounds.position.x + 50.f,
+                mapBounds.position.y + 50.f
+            },
+            Direction::Right
+        };
+
+    case GameMode::ArenaTest:
+        return RoundSettings{
+            {
+                mapBounds.position.x +
+                    mapBounds.size.x / 2.f,
+
+                mapBounds.position.y +
+                    mapBounds.size.y / 2.f
+            },
+            Direction::Up
+        };
+    }
+
+    // Defensive fallback in case another mode is added incorrectly.
+    return RoundSettings{
         {
             mapBounds.position.x + 50.f,
             mapBounds.position.y + 50.f
-        }
-    );
-
-    const Direction startingDirection = Direction::Right;
-
-    snake.reset(startingPosition, startingDirection);
-
-    currentState = GameState::Playing;
+        },
+        Direction::Right
+    };
 }
 
 // Draws the menu or gameplay depending on the current game state.

@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Segment.h"
+
 enum class Direction
 {
     Up,
@@ -13,25 +15,25 @@ enum class Direction
 class Snake
 {
 public:
-    //constructor
     Snake();
 
-    //Main Actions
+    // Main actions
     void reset(
         sf::Vector2f startingPosition,
         Direction startingDirection
     );
+
     void setPosition(sf::Vector2f position);
     void setDirection(Direction newDirection);
     void move(float deltaTime);
 
-    //Drawing
+    // Drawing
     void draw(sf::RenderWindow& window) const;
 
     sf::FloatRect getBounds() const;
 
 private:
-    sf::RectangleShape head;
+    Segment head;
 
     Direction direction;
     float speed;

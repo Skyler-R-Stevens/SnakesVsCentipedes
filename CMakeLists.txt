@@ -16,19 +16,30 @@ find_package(SFML COMPONENTS Graphics REQUIRED)
 # Add source to this project's executable.
 add_executable (
     SnakesVsCentipedes
+
     Main.cpp
+
     Game.cpp
     Game.h
+
     Menu.cpp
     Menu.h
+
     Snake.cpp
     Snake.h
+
     GameOverScreen.cpp
     GameOverScreen.h
+
     Map.cpp
     Map.h
+
     GameMode.h
+
     RoundSettings.h
+
+    Segment.cpp
+    Segment.h
 )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

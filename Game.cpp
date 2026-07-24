@@ -57,6 +57,10 @@ int Game::run()
             {
                 currentState = GameState::GameOver;
             }
+            if (hasSnakeHitWall() || snake.hasHitSelf())
+            {
+                currentState = GameState::GameOver;
+            }
         }
 
         render();
@@ -204,8 +208,8 @@ RoundSettings Game::createRoundSettings() const
     case GameMode::Classic:
         return RoundSettings{
             {
-                mapBounds.position.x + 50.f,
-                mapBounds.position.y + 50.f
+                mapBounds.position.x + 150.f,
+                mapBounds.position.y + 150.f
             },
             Direction::Right
         };
@@ -226,8 +230,8 @@ RoundSettings Game::createRoundSettings() const
     // Defensive fallback in case another mode is added incorrectly.
     return RoundSettings{
         {
-            mapBounds.position.x + 50.f,
-            mapBounds.position.y + 50.f
+            mapBounds.position.x + 150.f,
+            mapBounds.position.y + 150.f
         },
         Direction::Right
     };

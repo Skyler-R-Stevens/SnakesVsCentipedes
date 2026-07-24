@@ -2,6 +2,9 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <cstddef>
+#include <vector>
+
 #include "Segment.h"
 
 enum class Direction
@@ -31,10 +34,21 @@ public:
     void draw(sf::RenderWindow& window) const;
 
     sf::FloatRect getBounds() const;
+    bool hasHitSelf() const;
 
 private:
-    Segment head;
+    void moveOneStep();
+    bool isOppositeDirection(Direction newDirection) const;
+    sf::Vector2f getMovementOffset(Direction movementDirection) const;
+
+    std::vector<Segment> segments;
 
     Direction direction;
-    float speed;
+    Direction nextDirection;
+
+    float moveTimer;
+    float moveInterval;
+
+    static constexpr float segmentSize = 30.f;
+    static constexpr std::size_t startingLength = 5;
 };
